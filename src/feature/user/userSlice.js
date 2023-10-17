@@ -2,6 +2,23 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authService } from "./userService";
 import { toast} from 'react-toastify'
 
+
+export const myAsyncThunk = createAsyncThunk(
+    'mySlice/myAsyncThunk',
+    async (payload, { rejectWithValue }) => {
+      try {
+        // Your API request logic here
+        const response = await authService(payload);
+        return response.data;
+      } catch (error) {
+        return rejectWithValue({
+          message: error.message,
+          // Additional error information can be included here
+        });
+      }
+    }
+  );
+
 export const registerUser = createAsyncThunk("auth/register", async (userData, thunkAPI) => {
     try {
         return await authService.register(userData);
@@ -11,7 +28,11 @@ export const registerUser = createAsyncThunk("auth/register", async (userData, t
 })
 export const loginUser = createAsyncThunk("auth/login", async (userData, thunkAPI) => {
     try {
-        return await authService.login(userData);
+        const data = await authService.login(userData);
+        if(data) {
+            window.location.replace('/store')
+        }
+        return data;
     } catch (error) {
         return thunkAPI.rejectWithValue(error);
     }
@@ -23,6 +44,52 @@ return await authService.getUserWishlist();
         return thunkAPI.rejectWithValue(error);
     }
 })
+export const addProdToCart = createAsyncThunk("user/cart/add", async (cartData,thunkAPI) => {
+    try{
+return await authService.addToCart(cartData);
+    }catch(error){
+        return thunkAPI.rejectWithValue(error);
+    }
+})
+
+
+  export const getUserCart = createAsyncThunk(
+    'user/cart/get',
+    async (_, { rejectWithValue }) => {
+      try {
+        return await authService.getCart();
+
+      } catch (error) {
+        return rejectWithValue({
+          message: error.message, // Include the error message
+        });
+      }
+    }
+  );
+  export const deleteCartProduct = createAsyncThunk(
+    'user/cart/product/delete',
+    async (id,thunkAPI) => {
+      try {
+        return await authService.removeProductFromCart(id);
+
+      } catch (error) {
+       
+        return thunkAPI.rejectWithValue(error);
+      }
+    }
+  );
+  export const updateCartProduct = createAsyncThunk(
+    'user/cart/product/update',
+    async (cartDetail,thunkAPI) => {
+      try {
+        return await authService.updateProductFromCart(cartDetail);
+
+      } catch (error) {
+       
+        return thunkAPI.rejectWithValue(error);
+      }
+    }
+  );
 
 const getCustomerfromLocalStorage = localStorage.getItem("customer")
   ? JSON.parse(localStorage.getItem("customer"))
@@ -90,11 +157,87 @@ export const authSlice = createSlice({
             state.wishlist = action.payload;
         })
         .addCase(getUserProductWishlist.rejected, (state,action) => {
-            state.isLoading=false;
-            state.isError= true;
-            state.isSuccess= false;
-            state.message = action.error;
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+            state.message = action.error.message || "An error occurred"; // Handle error messages
+            console.error("API request failed:", action.error);
         })
+        .addCase(addProdToCart.pending, (state) => {
+            state.isLoading=true;
+        }).addCase(addProdToCart.fulfilled, (state,action) => {
+            state.isLoading= false;
+            state.isError= false;
+            state.isSuccess= true;
+            state.cartProduct = action.payload;
+           if(state.isSuccess){
+            toast.success("Product Added to Cart")
+           }
+        }).addCase(addProdToCart.rejected, (state,action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+            state.message = action.error.message || "An error occurred"; // Handle error messages
+            console.error("API request failed:", action.error);
+        })
+        .addCase(getUserCart.pending, (state) => {
+            state.isLoading=true;
+        }).addCase(getUserCart.fulfilled, (state,action) => {
+            state.isLoading= false;
+            state.isError= false;
+            state.isSuccess= true;
+            state.cartProducts = action.payload;
+        
+        }).addCase(getUserCart.rejected, (state,action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+            state.message = action.error.message || "An error occurred"; // Handle error messages
+            console.error("API request failed:", action.error);
+        })
+        .addCase(deleteCartProduct.pending, (state) => {
+            state.isLoading=true;
+        }).addCase(deleteCartProduct.fulfilled, (state,action) => {
+            state.isLoading= false;
+            state.isError= false;
+            state.isSuccess= true;
+            state.deletedCartProduct = action.payload;
+            if(state.isSuccess){
+                toast.success("Product Deleted From Cart Successfully !")
+            }
+        
+        }).addCase(deleteCartProduct.rejected, (state,action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+            state.message = action.error;
+            if(state.isSuccess === false){
+                toast.error("Something Went Wrong!")
+            }
+            
+        })
+        .addCase(updateCartProduct.pending, (state) => {
+            state.isLoading=true;
+        }).addCase(updateCartProduct.fulfilled, (state,action) => {
+            state.isLoading= false;
+            state.isError= false;
+            state.isSuccess= true;
+            state.updatedCartProduct = action.payload;
+            if(state.isSuccess){
+                toast.success("Product updated From Cart Successfully !")
+            }
+        
+        }).addCase(updateCartProduct.rejected, (state,action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+            state.message = action.error;
+            if(state.isSuccess === false){
+                toast.error("Something Went Wrong!")
+            }
+            
+        })
+        
         ;
     }
 })

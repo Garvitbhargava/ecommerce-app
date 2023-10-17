@@ -1,12 +1,48 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
 import Marquee from 'react-fast-marquee'
 import BlogCard from '../component/BlogCard'
 import ProductCard from '../component/ProductCard'
 import SpecialProduct from '../component/SpecialProduct'
 import Container from '../component/Container'
 import { services} from '../utils/Data';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllBlogs } from '../feature/blogs/blogSlice';
+import moment from "moment"; 
+import { getAllProducts } from '../feature/products/productSlice';
+import {useLocation } from 'react-router-dom'
+import prodcompare from "../images/prodcompare.svg";
+import ReactStars from "react-rating-stars-component"
+import wish from "../images/wish.svg";
+import wishlist from "../images/wishlist.svg";
+import watch from "../images/watch.jpg";
+import watch1 from "../images/watch-2.avif";
+import addcart from "../images/add-cart.svg";
+import view from "../images/view.svg";
+import { addToWishlist } from '../feature/products/productSlice';
 const Home = () => {
+  const blogState = useSelector((state) => state.blog?.blog || []);
+  const productState = useSelector((state) => state.product.product );
+  const navigate =useNavigate();
+
+  console.log(productState);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getBlogs();
+    getallProducts();
+  }, []);
+
+  const getBlogs = () => {
+    dispatch(getAllBlogs());
+  };
+  const getallProducts = () => {
+    dispatch(getAllProducts());
+  }
+  const addToWish = (id) =>{
+    dispatch(addToWishlist(id))
+        }
+
   return (
   <>
   <Container class1="home-wrapper-1 py-5"> 
@@ -171,10 +207,64 @@ const Home = () => {
       <div className='col-12'>
         <h3 className='section-heading'>Featured Collection</h3>
       </div>
-     <ProductCard/>
-     <ProductCard/>
-     <ProductCard/>
-     <ProductCard/>
+      {
+      productState &&
+      productState?.map((item,index) => {
+        if (item?.tags === "featured") {
+        
+           return   (
+            <div 
+            key={index}
+            className={  "col-3"}>
+            <div
+          
+            className='product-card position-relative'>
+                <div className='wishlist-icon position-absolute'>
+                <button className='border-0 bg-transparent' 
+                onClick={(e) =>{addToWish(item?._id)}}>
+                   <img src={wish} alt='wish'/>
+                </button>
+                </div>
+                <div className='product-image'>
+                    <img src={watch} className="img-fluid" alt='product image'/>
+                    <img src={watch1}  className="img-fluid" alt='product image'/>
+                </div>
+                <div className='product-details'>
+                    <h6 className="brand">{item?.brand}</h6>
+                    <h5 className='product-title'>
+                       {item?.title}
+                        </h5>
+                        <ReactStars count={5} 
+                        size={24} 
+                         value={item?.totalrating.toString()} 
+                         edit={false}
+                         activeColor="#ffd700"/>
+                      
+                     <p className='price'>${item?.price}</p>   
+                </div>
+                <div className='action-bar position-absolute'>
+                    <div className='d-flex flex-column gap-10'>
+                    <button className='border-0 bg-transparent'>
+                        <img src={prodcompare} alt='compare'/>
+                        </button> 
+                        <button className='border-0 bg-transparent'>
+                        <img onClick={() => navigate("/product/" + item?._id)} src={view} alt='view'/>
+                        </button>  
+                        <button className='border-0 bg-transparent'>
+                        <img src={addcart} alt='add-cart'/>
+                        </button>  
+                    
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+           )
+          
+        }
+       
+      })
+    }
     </div>
   </div>
 </section>
@@ -188,9 +278,31 @@ const Home = () => {
       </div>
     </div>
     <div className='row'>
-      <SpecialProduct/>
-      <SpecialProduct/>
-      <SpecialProduct/>
+    {
+      productState &&
+      productState?.map((item,index) => {
+        if (item?.tags === "special") {
+        
+           return <SpecialProduct 
+           key={index}
+           id={item?._id}
+           brand={item?.brand}
+           title={item?.title}
+           totalrating={item?.totalrating}
+           price= {item?.price}
+           sold= {item?.sold}
+           quantity= {item?.quantity}
+           />;
+          
+        }
+       
+      })
+    }
+      
+       
+      
+      
+    
     </div>
   </div>
 </section>
@@ -202,10 +314,71 @@ const Home = () => {
       </div>
     </div>
     <div className='row'>
-    <ProductCard/>
-     <ProductCard/>
-     <ProductCard/>
-     <ProductCard/>
+    {
+      productState &&
+      productState?.map((item,index) => {
+        if (item?.tags === "popular") {
+        
+           return   (
+            <div 
+            key={index}
+            className={  "col-3"}>
+            <Link  
+          /* to = { `${
+            location.pathname == "/"
+            ? "/product/:id"
+            : location.pathname == "/product/:id"
+            ? "/product/:id"
+            :"id"
+           }`}*/
+            className='product-card position-relative'>
+                <div className='wishlist-icon position-absolute'>
+                <button className='border-0 bg-transparent' 
+                onClick={(e) =>{addToWish(item?._id)}}>
+                   <img src={wish} alt='wish'/>
+                </button>
+                </div>
+                <div className='product-image'>
+                    <img src={watch} className="img-fluid" alt='product image'/>
+                    <img src={watch1}  className="img-fluid" alt='product image'/>
+                </div>
+                <div className='product-details'>
+                    <h6 className="brand">{item?.brand}</h6>
+                    <h5 className='product-title'>
+                       {item?.title}
+                        </h5>
+                        <ReactStars count={5} 
+                        size={24} 
+                         value={item?.totalrating.toString()} 
+                         edit={false}
+                         activeColor="#ffd700"/>
+                      
+                     <p className='price'>${item?.price}</p>   
+                </div>
+                <div className='action-bar position-absolute'>
+                    <div className='d-flex flex-column gap-10'>
+                    <button className='border-0 bg-transparent'>
+                        <img src={prodcompare} alt='compare'/>
+                        </button> 
+                        <button className='border-0 bg-transparent'>
+                        <img src={view} alt='view'/>
+                        </button>  
+                        <button className='border-0 bg-transparent'>
+                        <img src={addcart} alt='add-cart'/>
+                        </button>  
+                    
+                        
+                    </div>
+                </div>
+            </Link>
+        </div>
+           )
+          
+        }
+       
+      })
+    }
+
     </div>
   </div>
 </section>
@@ -259,18 +432,19 @@ const Home = () => {
    
     </div>
     <div className='row'>
-      <div className='col-3'>
-      <BlogCard/>
-      </div>
-      <div className='col-3'>
-      <BlogCard/>
-      </div>
-      <div className='col-3'>
-      <BlogCard/>
-      </div>
-      <div className='col-3'>
-      <BlogCard/>
-      </div>
+    {
+    blogState &&
+    blogState?.map((item, index) => (
+                <div className='col-3' key={index}>
+                  <BlogCard
+                    id={item?._id}
+                    title={item?.title}
+                    description={item?.description}
+                    image={item?.images[0]?.url}
+                    date={moment(item?.createdAt).format("MMMM Do YYYY, h:mm a")}
+                  />
+                </div>
+              ))}
     </div>
   </div>
 </section>

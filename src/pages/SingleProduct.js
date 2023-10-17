@@ -1,16 +1,65 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BreadCrump from '../component/BreadCrump'
 import Meta from '../component/Meta'
 import ProductCard from '../component/ProductCard'
 import ReactStars from "react-rating-stars-component";
 import ReactImageZoom from 'react-image-zoom';
 import Color from '../component/Color'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {TbGitCompare} from 'react-icons/tb'
 import {AiOutlineHeart} from 'react-icons/ai'
 import Container from '../component/Container';
+import { useDispatch, useSelector } from 'react-redux';
+import { getABlog } from '../feature/blogs/blogSlice';
+import { getAProduct } from '../feature/products/productSlice';
+import { toast } from 'react-toastify';
+import { addProdToCart, getUserCart } from '../feature/user/userSlice';
 
 const SingleProduct = () => {
+
+  const [color,setColor] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [alreadyAdded, setAlreadyAdded]= useState(false)
+  const location= useLocation();
+  const navigate= useNavigate();
+  const getProductId = location.pathname.split("/")[2]
+
+const dispatch= useDispatch();
+
+const productState = useSelector(state => state.product.singleProduct);
+const cartState = useSelector(state => state.auth.cartProducts)
+useEffect(() => {
+  dispatch(getAProduct(getProductId))
+  dispatch(getUserCart())
+},[])
+
+useEffect(() =>{
+  for(let index=0; index<cartState?.length; index++){
+    if(getProductId === cartState[index]?.productId?._id){
+      setAlreadyAdded(true)
+    }
+  }
+})
+
+const uploadCart = () => {
+  if (color === null) {
+    toast.error('Please Choose Color');
+    return;
+  } 
+  if (alreadyAdded) {
+    navigate('/cart');
+  } else {
+    dispatch(addProdToCart({ productId: productState?._id, quantity, color, price: productState?.price }));
+    navigate('/cart');
+    toast.success('Product Added to Cart');
+  }
+};
+
+
+
+
+
+
     const props = {
         width: 400, 
         height: 600, 
@@ -63,15 +112,15 @@ const SingleProduct = () => {
                 <div className='main-product-details'>
                     <div className='border-bottom'>
                     <h3 className='title'>
-                        Kids Headphones Bulk 10 Pack Multi Colored For Students
+                       {productState?.title}
                         </h3>   
                     </div>
                     <div className='border-bottom py-3'>
-                      <p className='price'>$ 100</p>
+                      <p className='price'>$ {productState?.price}</p>
                       <div className='d-flex align-items-center gap-10'>
                       <ReactStars count={5} 
                     size={24} 
-                     value={3} 
+                     value={productState?.totalratings} 
                      edit={false}
                      activeColor="#ffd700"/>
                      <p className='mb-0 t-review'>(2 Reviews)</p>
@@ -87,15 +136,15 @@ const SingleProduct = () => {
                       </div>
                       <div className='d-flex gap-10 align-items-center my-2'>
                         <h3 className='product-heading'>Brand:</h3> 
-                        <p className='product-data'>Havels</p>
+                        <p className='product-data'>{productState?.brand} </p>
                       </div>
                       <div className='d-flex gap-10 align-items-center my-2'>
                         <h3 className='product-heading'>Category:</h3> 
-                        <p className='product-data'>Watch</p>
+                        <p className='product-data'>{productState?.category}</p>
                       </div>
                       <div className='d-flex gap-10 align-items-center my-2'>
                         <h3 className='product-heading'>Tag:</h3> 
-                        <p className='product-data'>Watch</p>
+                        <p className='product-data'>{productState?.tags}</p>
                       </div>
                       <div className='d-flex gap-10 align-items-center my-2'>
                         <h3 className='product-heading'>Availability:</h3> 
@@ -114,25 +163,46 @@ const SingleProduct = () => {
                             Xl</span>
                         </div>
                       </div>
-                      <div className='d-flex gap-10 flex-column mt-2 mb-3'>
+                      {
+                        alreadyAdded === false && <>
+                        
+                        <div className='d-flex gap-10 flex-column mt-2 mb-3'>
                         <h3 className='product-heading'>Color:</h3> 
-                       <Color/>
+                       <Color setColor={setColor} colorData={productState?.color}/>
                       </div>
+                        
+                        </>
+                      }
+                     
                       <div className='d-flex align-items-center gap-15 flex-row mt-2 mb-3'>
-                        <h3 className='product-heading'>Quantity:</h3> 
+                        {
+                          alreadyAdded === false && <>
+                           <h3 className='product-heading'>Quantity:</h3> 
                        <div className=''>
                         <input type='number' 
                         name=''
                          min={1}
                           max={10} 
                           className='form-control'
-                          style={{width:"70px"}}></input>
+                          style={{width:"70px"}}
+                          id=""
+                          onChange={(e) => setQuantity(e.target.value)}
+                          value={quantity}
+                          ></input>
                        </div>
-                       <div className='d-flex align-items-center gap-30 ms-5'>
+                          
+                          
+                          </>
+                        }
+                       
+                       <div className={ alreadyAdded? "ms-0":"ms-5" + 'd-flex align-items-center gap-30 ms-5'}>
                        <button 
             className='button border-0' 
-            type='sumbit'>
-              Add To Cart
+            type='button'
+           // data-bs-toggle="model"
+            //data-bs-target="#staticBackdrop"
+            onClick={() => {alreadyAdded? navigate('/cart') : uploadCart()}}>
+            {alreadyAdded? "Go to Cart" : "Add to Cart"}
               </button>
             <button className='button border-0 signup'> Buy It Now</button>
                        </div>
@@ -158,7 +228,8 @@ const SingleProduct = () => {
                       <div className='d-flex gap-10 align-items-center my-3'>
                         <h3 className='product-heading'>Product Link:</h3> 
                         <a href='javascript:void(0);' onClick={() => {
-                          copyToClipboard("https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg");
+                          copyToClipboard(
+                           window.location.href);
                         }}> 
                         Copy Product Link
                         </a>
@@ -177,8 +248,8 @@ const SingleProduct = () => {
             <div className='col-12'>
             <h4>Description</h4>
              <div className='bg-white p-3'>
-                <p >
-                    lorem ipsum dolor, sit 
+                <p  dangerouslySetInnerHTML={{ __html: productState?.description }}>
+               
                 </p>
              </div>
             </div>

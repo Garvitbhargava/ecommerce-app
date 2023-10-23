@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import BreadCrump from '../component/BreadCrump'
 import Meta from '../component/Meta'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Container from '../component/Container'
 import Custominput from '../component/Custominput'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loginUser } from '../feature/user/userSlice'
+import { authService } from '../feature/user/userService'
 
 
 const loginSchema = yup.object({
@@ -17,6 +18,8 @@ const loginSchema = yup.object({
 
 const Login = () => {
 
+const authState = useSelector(state => state.auth)
+const navigate = useNavigate();
 const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: { 
@@ -25,9 +28,11 @@ const dispatch = useDispatch();
     },
     validationSchema:loginSchema,
     onSubmit: (values) => {
-   dispatch(loginUser(values))
-    },
-  });
+   dispatch(loginUser(values));
+   navigate("/home")
+},
+});
+
   return (
   <>
     <Meta title={"Login"} />

@@ -20,6 +20,8 @@ import watch1 from "../images/watch-2.avif";
 import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 import { addToWishlist } from '../feature/products/productSlice';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 const Home = () => {
   const blogState = useSelector((state) => state.blog?.blog || []);
   const productState = useSelector((state) => state.product.product );
@@ -136,7 +138,7 @@ const Home = () => {
     </Container> 
 
 
-<section className="home-wrapper-2 py-2">
+{/* <Container class1="home-wrapper-2 py-2">
   <div className='container-xxl'>
     <div className='row'>
       <div className='col-12'>
@@ -199,9 +201,9 @@ const Home = () => {
       </div>
     </div>
   </div>
-</section>
+</Container> */}
 
-<section className="featured-wrapper py-5 home-wrapper-2">
+<Container class1="featured-wrapper py-5 home-wrapper-2">
   <div className='container-xxl'>
     <div className='row'>
       <div className='col-12'>
@@ -244,15 +246,15 @@ const Home = () => {
                 </div>
                 <div className='action-bar position-absolute'>
                     <div className='d-flex flex-column gap-10'>
-                    <button className='border-0 bg-transparent'>
+                    {/* <button className='border-0 bg-transparent'>
                         <img src={prodcompare} alt='compare'/>
-                        </button> 
+                        </button>  */}
                         <button className='border-0 bg-transparent'>
                         <img onClick={() => navigate("/product/" + item?._id)} src={view} alt='view'/>
                         </button>  
-                        <button className='border-0 bg-transparent'>
+                        {/* <button className='border-0 bg-transparent'>
                         <img src={addcart} alt='add-cart'/>
-                        </button>  
+                        </button>   */}
                     
                         
                     </div>
@@ -267,10 +269,10 @@ const Home = () => {
     }
     </div>
   </div>
-</section>
+</Container>
 
 
-<section className='special-wrapper py-5 home-wrapper-2'>
+<Container class1='special-wrapper py-5 home-wrapper-2'>
   <div className='container-xxl'>
     <div className='row'>
     <div className='col-12'>
@@ -305,8 +307,8 @@ const Home = () => {
     
     </div>
   </div>
-</section>
-<section className="popular-wrapper py-5 home-wrapper-2">
+</Container>
+<Container class1="popular-wrapper py-5 home-wrapper-2">
   <div className='container-xxl'>
     <div className='row'>
       <div className='col-12'>
@@ -357,15 +359,15 @@ const Home = () => {
                 </div>
                 <div className='action-bar position-absolute'>
                     <div className='d-flex flex-column gap-10'>
-                    <button className='border-0 bg-transparent'>
+                    {/* <button className='border-0 bg-transparent'>
                         <img src={prodcompare} alt='compare'/>
-                        </button> 
+                        </button>  */}
                         <button className='border-0 bg-transparent'>
                         <img src={view} alt='view'/>
                         </button>  
-                        <button className='border-0 bg-transparent'>
+                        {/* <button className='border-0 bg-transparent'>
                         <img src={addcart} alt='add-cart'/>
-                        </button>  
+                        </button>   */}
                     
                         
                     </div>
@@ -381,10 +383,10 @@ const Home = () => {
 
     </div>
   </div>
-</section>
+</Container>
 
 
-<section className="marque-wrapper py-5">
+<Container class1="marque-wrapper py-5">
   <div className='container'>
     <div className='row'>
       <div className='col-12'>
@@ -421,9 +423,9 @@ const Home = () => {
       </div>
     </div>
   </div>
-</section>
+</Container>
 
-<section className="blog-wrapper py-5 home-wrapper-2">
+<Container class1="blog-wrapper py-5 home-wrapper-2">
   <div className='container-xxl'>
     <div className='row'>
       <div className='col-12'>
@@ -447,7 +449,7 @@ const Home = () => {
               ))}
     </div>
   </div>
-</section>
+</Container>
   </>
   )
 }

@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, Link, useNavigate } from 'react-router-dom'
 import {BsSearch} from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { getAProduct } from '../feature/products/productSlice';
 const Header = () => {
 
     const dispatch = useDispatch()
+    const authState = useSelector(state => state?.auth)
     const cartState= useSelector(state => state?.auth?.cartProducts)
+    const productState =useSelector(state => state?.product?.product)
+    const [productOpt,setProductOpt] = useState([])
+    const [paginate, setPaginate] = useState(true);
+    const navigate =  useNavigate()
+    
+
     const [total,setTotal] = useState(null)
+    
 
     useEffect(() => {
         let sum=0
@@ -14,7 +25,22 @@ const Header = () => {
             sum =sum + (Number(cartState[index].quantity) * Number(cartState[index].price))
             setTotal(sum)
         }
-    })
+    },[cartState])
+
+    useEffect(() =>{
+let data = []
+for(let index=0; index< productState.length; index++) {
+    const element = productState[index];
+    data.push({id:index,prod:element?._id,name:element?.title})
+}
+setProductOpt(data)
+    },[productState])
+
+const handleLogout = () => {
+    localStorage.clear()
+    window.location.reload()
+}
+
   return (
   <>
   <header className='header-top-strip py-3'>
@@ -42,10 +68,19 @@ const Header = () => {
                 </div>  
               <div className='col-5'>
               <div class="input-group ">
-  <input type="text" class="form-control py-2" 
-  placeholder="Search Product Here..." 
-  aria-label="Search Product Here..." 
-  aria-describedby="basic-addon2"/>
+              <Typeahead
+        id="pagination-example"
+        onPaginate={() => console.log('Results paginated')}
+        onChange={(selected) => {
+navigate(`/product/${selected[0]?.prod}`)
+dispatch(getAProduct(selected[0]?.prod))
+        }}
+        options={productOpt}
+        paginate={paginate}
+        labelKey={"name"}
+        minLength={2}
+        placeholder="Search for Product here..."
+      />
   <span className="input-group-text p-3" 
   id="basic-addon2">
     <BsSearch className='fs-6'/>
@@ -54,12 +89,12 @@ const Header = () => {
               <div className='col-5'>
                 <div className='header-upper-links d-flex align-items-center justify-content-between'> 
                 <div>
-            <Link to="/compare-product" className='d-flex align-items-center gap-10 text-white'>
+            {/* <Link to="/compare-product" className='d-flex align-items-center gap-10 text-white'>
             <img src="images/compare.svg" alt='compare'></img>
             <p className='mb-0'>
                 Compare <br/> Products
             </p>
-            </Link>
+            </Link> */}
         </div>
         <Link  to="/wishlist" className='d-flex align-items-center gap-10 text-white'>
             <img src="images/wishlist.svg" alt='wishlist'></img>
@@ -69,12 +104,16 @@ const Header = () => {
             </Link>
         <div>
         <Link 
-        to="/login" 
+        to={ authState?.user === null ? "/login" : "/my-profile" }
         className='d-flex align-items-center gap-10 text-white'>
-            <img src="images/user.svg" alt='user'></img>
-            <p className='mb-0'>
-                Login <br/> My Account
+            <img src="images/user.svg" alt='user'/>
+          {
+            authState.user === null ?   <p className='mb-0'>
+            Login <br/> My Account
+        </p> :   <p className='mb-0'>
+               Welcome {authState.user?.firstname}
             </p>
+          }
             </Link>
         </div>
         <div>
@@ -130,8 +169,10 @@ const Header = () => {
  <div className='d-flex aling-items-center gap-15'>
   <NavLink to="/Home">Home</NavLink>
     <NavLink to="/store">Our Store</NavLink>
+    <NavLink to="/my-orders">My Orders</NavLink>
     <NavLink to="/blogs">Blogs</NavLink>
      <NavLink to="/Contact">Contact</NavLink>
+     <button onClick={handleLogout} className='border border-0 bg-transparent text-white text-uppercase' type='button'> Logout </button>
                             </div>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { getAProduct } from '../feature/products/productSlice';
+import { getUserCart } from '../feature/user/userSlice';
 const Header = () => {
 
     const dispatch = useDispatch()
@@ -17,7 +18,20 @@ const Header = () => {
     
 
     const [total,setTotal] = useState(null)
-    
+
+    const getTokenFromLocalStorage = localStorage.getItem("token");
+  
+
+    const config2 = {
+       headers: {
+           Authorization: `Bearer ${getTokenFromLocalStorage}`,
+           Accept: "application/json"
+           },
+     };
+     
+     useEffect(() => {
+        dispatch(getUserCart(config2))
+     },[])
 
     useEffect(() => {
         let sum=0

@@ -35,7 +35,7 @@ const OurStore = () => {
     getProducts();
   }, [sort,tag,brand,category,minPrice,maxPrice]);
   const getProducts = () => {
-    dispatch(getAllProducts(sort,tag,brand,category,minPrice,maxPrice));
+    dispatch(getAllProducts({sort,tag,brand,category,minPrice,maxPrice}));
   };
 
   
@@ -78,7 +78,7 @@ const OurStore = () => {
                 <ul className="ps-0">
                   {
                     categories && [...new Set(categories)].map((item,index) => {
-                      return <li key={index} on onClick={() => setCategories(item)} >{item}</li>
+                      return <li key={index} on onClick={() => setCategory(item)} >{item}</li>
                     })
                   }
                 </ul>

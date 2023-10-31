@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BreadCrump from '../component/BreadCrump'
 import Meta from '../component/Meta'
 import { Link, useNavigate } from 'react-router-dom'
@@ -18,6 +18,8 @@ const loginSchema = yup.object({
 
 const Login = () => {
 
+
+  
 const authState = useSelector(state => state.auth)
 const navigate = useNavigate();
 const dispatch = useDispatch();
@@ -29,9 +31,15 @@ const dispatch = useDispatch();
     validationSchema:loginSchema,
     onSubmit: (values) => {
    dispatch(loginUser(values));
-   navigate("/home")
+  
 },
 });
+
+useEffect(() => {
+  if(authState?.user !== null && authState?.isError === false){
+    navigate("/home")
+  }
+},[authState])
 
   return (
   <>

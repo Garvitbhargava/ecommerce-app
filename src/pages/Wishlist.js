@@ -20,7 +20,7 @@ const Wishlist = () => {
     dispatch(getUserProductWishlist());
   };
   const wishlistState = useSelector(
-    (state) => state.auth.addToWishlist?.wishlist || []
+    (state) => state.auth?.wishlist || []
   );
   const removeFromWishlist = (id) => {
     dispatch(addToWishlist(id));

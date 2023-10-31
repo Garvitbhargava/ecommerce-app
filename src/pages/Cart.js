@@ -10,13 +10,31 @@ import { deleteCartProduct, getUserCart, updateCartProduct } from '../feature/us
 
 const Cart = () => {
 
+  const getTokenFromLocalStorage = localStorage.getItem("token");
+  
 
+   const config2 = {
+      headers: {
+          Authorization: `Bearer ${getTokenFromLocalStorage}`,
+          Accept: "application/json"
+          }
+      }
   const dispatch = useDispatch();
   const [productUpdateDetail,setProductUpdateDetail] = useState(null)
   const userCartState = useSelector(state => state.auth.cartProducts)
   const [totalAmount,setTotalAmount] =useState(null)
+
+  const [productQuantities, setProductQuantities] = useState({});
+
+const handleQuantityChange = (cartItemId, newQuantity) => {
+  setProductQuantities({
+    ...productQuantities,
+    [cartItemId]: newQuantity,
+  });
+};
+
   useEffect (() =>{
-    dispatch(getUserCart())
+    dispatch(getUserCart(config2))
   },[])
   useEffect(() =>
 
@@ -24,17 +42,17 @@ const Cart = () => {
  if(productUpdateDetail !== null) {
   dispatch(updateCartProduct({cartItemId:productUpdateDetail?.cartItemId,quantity:productUpdateDetail?.quantity}))
   setTimeout(() => {
-    dispatch(getUserCart())
+    dispatch(getUserCart(config2))
   },200);
  }
 }
   ,[productUpdateDetail])
 
   const deleteACartProduct= (id) => {
-    dispatch(deleteCartProduct(id))
+    dispatch(deleteCartProduct({id:id, config2:config2}))
     setTimeout(() =>
     {
-      dispatch(getUserCart())
+      dispatch(getUserCart(config2))
     },200)
   }
   useEffect(() => {
@@ -88,12 +106,13 @@ const Cart = () => {
                            <input  
                            className="form-control" 
                            type='number' 
-                           name='' 
+                           name={"quantity"+item?._id} 
                            min={1}
                            max={10}
-                           value={productUpdateDetail?.quantity ? productUpdateDetail?.quantity:item?.quantity}
-                           onChange={(e) => {setProductUpdateDetail({cartItemId:item?._id,quantity:e.target.value})}}
-                           id=''/>
+                           id= {"cart"+item?._id}
+                           value={productQuantities[item?._id] || item?.quantity}
+                           onChange={(e) => handleQuantityChange(item?._id, e.target.value)}
+                           />
                         </div>
                         <div>
                            <AiFillDelete onClick={() =>{deleteACartProduct(item?._id)}} className='text-danger'/>

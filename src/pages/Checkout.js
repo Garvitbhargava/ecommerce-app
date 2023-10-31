@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {BiArrowBack} from 'react-icons/bi'
 import watch from "../images/watch.jpg"
 import Container from '../component/Container'
@@ -8,7 +8,8 @@ import {useFormik} from 'formik'
 import * as yup from "yup"
 import axios from 'axios'
 import { config } from '../utils/axiosConfig'
-import { createAnOrder } from '../feature/user/userSlice'
+import { createAnOrder, deleteUserCart, getUserCart, resetState } from '../feature/user/userSlice'
+
 
 
 
@@ -24,12 +25,22 @@ const shippingSchema = yup.object({
 
 
 const Checkout = () => {
+  const getTokenFromLocalStorage = localStorage.getItem("token");
+  
+
+    const config2 = {
+       headers: {
+           Authorization: `Bearer ${getTokenFromLocalStorage}`,
+           Accept: "application/json"
+           }
+     }
 
     const dispatch = useDispatch()
     const cartState =  useSelector(state=> state?.auth?.cartProducts)
+    const authState = useSelector(state => state?.auth)
+    const navigate = useNavigate()
     const [totalAmount,setTotalAmount] =useState(null)
     const [shippingInfo,setShippingInfo] = useState(null)
-    const [paymentInfo,setPaymentInfo] = useState({razorpayPaymentId:"", razorpayOrderId:""})
     const [cartProductState,setCartProductState]=  useState([])
 
     useEffect(() => {
@@ -39,6 +50,15 @@ const Checkout = () => {
           setTotalAmount(sum)
         }
       })
+ useEffect(() => {
+     dispatch(getUserCart(config2))
+ },[])
+
+      useEffect( () => {
+if(authState?.orderedProduct?.order !== null && authState?.orderedProduct?.success === true ){
+navigate("/my-orders")
+}
+      },[authState])
 
       const formik = useFormik({
         initialValues: { 
@@ -51,13 +71,14 @@ country:"",
 pincode:"",
 other:"",  },
         validationSchema:shippingSchema,
-        onSubmit: (values) => {
- setShippingInfo(values)
- setTimeout (() => {
-  checkOutHandler()
- },300)
+        onSubmit: async (values) => {
+    await setShippingInfo(values)
+    localStorage.setItem("address",JSON.stringify(values))
+    checkOutHandler()
         },
       });
+
+    
 
 
       const loadScript = (src) => {
@@ -115,17 +136,17 @@ other:"",  },
                 const result = await axios.post("http://localhost:4000/api/user/order/paymentVerification", data,config);
  
  
-                setPaymentInfo({
-    razorpayPaymentId: response.razorpay_payment_id,
-    razorpayOrderId: response.razorpay_order_id,
- })
 
 
 
 
- dispatch(createAnOrder({ totalPrice: totalAmount, totalPriceAfterDiscount: totalAmount, orderItems: cartProductState, paymentInfo, shippingInfo }));
+dispatch(createAnOrder({ totalPrice: totalAmount, totalPriceAfterDiscount: totalAmount, orderItems: cartProductState, paymentInfo:result.data, shippingInfo:JSON.parse(localStorage.getItem("address")) }));
 
- console.log(createAnOrder)
+dispatch(deleteUserCart(config2))
+localStorage.removeItem("address")
+dispatch(resetState())
+
+
     
             },
             prefill: {

@@ -64,9 +64,9 @@ const uploadCart = () => {
 
     const props = {
         width: 400, 
-        height: 600, 
+        height: 400, 
         zoomWidth: 600, 
-        img: "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"};
+        img: productState?.images[0]?.url};
 
     const[orderedProduct, setorderedProduct]= useState(true);
     const copyToClipboard = (text) => {
@@ -120,25 +120,22 @@ const addRatingToProduct = ( )=> {
         <div className='row'>
         <div className='col-6'>
             <div className='main-product-image'>
-                <div>
+                {/* <div>
                     <ReactImageZoom {...props} />
-                    </div>
+                    </div> */}
             </div>
             <div className='other-product-images d-flex flex-wrap gap-15'>
-                <div>
-                    <img src='https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg'  className='img-fluid' 
-                    alt=''/>
-                </div>
-                <div>
-                    <img src='https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg' 
-                    className='img-fluid' alt=''/>
-                </div>
-                <div>
-                    <img src='https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg' className='img-fluid' alt=''/>
-                </div>
-                <div>
-                    <img src='https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg' className='img-fluid' alt=''/>
-                </div>
+
+              {productState?.images?.map((item,index) => {
+                return (
+                  <div>
+                  <img src={item?.url}  className='img-fluid' 
+                  alt=''/>
+              </div>
+                )
+                
+              })}
+               
 
             </div>
             </div> 

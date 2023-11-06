@@ -61,7 +61,7 @@ const handleQuantityChange = (cartItemId, newQuantity) => {
       sum = sum +(Number(userCartState[index].quantity)*userCartState[index].price)
       setTotalAmount(sum)
     }
-  })
+  },[userCartState,productQuantities])
 
   return (
  <>
@@ -110,8 +110,10 @@ const handleQuantityChange = (cartItemId, newQuantity) => {
                            min={1}
                            max={10}
                            id= {"cart"+item?._id}
-                           value={productQuantities[item?._id] || item?.quantity}
-                           onChange={(e) => handleQuantityChange(item?._id, e.target.value)}
+                           value={productQuantities[item?._id]}
+                           onChange={(e) => {
+                             handleQuantityChange(item?._id, e.target.value);
+                           }}
                            />
                         </div>
                         <div>

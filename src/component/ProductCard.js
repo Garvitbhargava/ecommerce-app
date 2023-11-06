@@ -16,8 +16,10 @@ const ProductCard = (props) => {
   const dispatch = useDispatch();
   let location = useLocation();
   const addToWish = (id) => {
+  
     dispatch(addToWishlist(id));
   };
+
   return (
     <>
       {Array.isArray(data) ? (
@@ -41,8 +43,13 @@ const ProductCard = (props) => {
                   </button>
                 </div>
                 <div className="product-image">
-                  <img src={watch} className="img-fluid" alt="product image" />
-                  <img src={watch1} className="img-fluid" alt="product image" />
+                  <img src={item?.images[0]?.url} 
+                  className="img-fluid  mx-auto "
+                   alt="product image"
+                  width={250} />
+                  <img src={watch1}   className="img-fluid mx-auto "
+                   alt="product image"
+                  width={160} />
                 </div>
                 <div className="product-details">
                   <h6 className="brand">{item?.brand}</h6>

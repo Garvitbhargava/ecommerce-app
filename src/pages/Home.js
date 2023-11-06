@@ -228,7 +228,7 @@ const Home = () => {
                 </button>
                 </div>
                 <div className='product-image'>
-                    <img src={watch} className="img-fluid" alt='product image'/>
+                    <img src={item?.images[0]?.url } className="img-fluid" alt='product image'/>
                     <img src={watch1}  className="img-fluid" alt='product image'/>
                 </div>
                 <div className='product-details'>
@@ -285,17 +285,17 @@ const Home = () => {
       productState?.map((item,index) => {
         if (item?.tags === "special") {
         
-           return <SpecialProduct 
+           return ( <SpecialProduct 
            key={index}
-           id={item?._id}
+           id={index?._id}
            brand={item?.brand}
            title={item?.title}
-           totalrating={item?.totalrating}
+           totalrating={item?.totalrating?.toString()}
            price= {item?.price}
            sold= {item?.sold}
            quantity= {item?.quantity}
-           />;
-          
+           />
+           );
         }
        
       })
@@ -325,14 +325,8 @@ const Home = () => {
             <div 
             key={index}
             className={  "col-3"}>
-            <Link  
-          /* to = { `${
-            location.pathname == "/"
-            ? "/product/:id"
-            : location.pathname == "/product/:id"
-            ? "/product/:id"
-            :"id"
-           }`}*/
+            <div
+         
             className='product-card position-relative'>
                 <div className='wishlist-icon position-absolute'>
                 <button className='border-0 bg-transparent' 
@@ -341,7 +335,7 @@ const Home = () => {
                 </button>
                 </div>
                 <div className='product-image'>
-                    <img src={watch} className="img-fluid" alt='product image'/>
+                    <img src={item?.images[0]?.url } className="img-fluid" alt='product image'/>
                     <img src={watch1}  className="img-fluid" alt='product image'/>
                 </div>
                 <div className='product-details'>
@@ -363,7 +357,7 @@ const Home = () => {
                         <img src={prodcompare} alt='compare'/>
                         </button>  */}
                         <button className='border-0 bg-transparent'>
-                        <img src={view} alt='view'/>
+                        <img onClick={() => navigate("/product/" + item?._id) } src={view} alt='view'/>
                         </button>  
                         {/* <button className='border-0 bg-transparent'>
                         <img src={addcart} alt='add-cart'/>
@@ -372,7 +366,7 @@ const Home = () => {
                         
                     </div>
                 </div>
-            </Link>
+            </div>
         </div>
            )
           

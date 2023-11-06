@@ -97,9 +97,9 @@ return await authService.addToCart(cartData);
   );
   export const updateCartProduct = createAsyncThunk(
     'user/cart/product/update',
-    async (cartDetail,thunkAPI) => {
+    async (data,thunkAPI) => {
       try {
-        return await authService.updateProductFromCart(cartDetail);
+        return await authService.updateProductFromCart(data);
 
       } catch (error) {
        

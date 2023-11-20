@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import BreadCrump from "../component/BreadCrump";
 import Meta from "../component/Meta";
 import ReactStars from "react-rating-stars-component";
@@ -11,60 +11,52 @@ import { getAllProducts } from "../feature/products/productSlice";
 const OurStore = () => {
   const [grid, setGrid] = useState(4);
   const productState = useSelector((state) => state.product.product);
-  const [brands,setbrands] = useState([])
-  const [categories,setCategories] = useState([])
-  const [tags,setTags] = useState([])
-  const [colors,setColors] = useState([])
-
-
-
+  const [brands, setbrands] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [colors, setColors] = useState([]);
 
   //filtter State
-  const [tag,setTag] = useState(null)
-  const [category,setCategory] = useState(null)
-  const [brand,setbrand] = useState(null)
-  const [minPrice,setMinPrice] = useState(null)
-  const [maxPrice,setMaxPrice] = useState(null)
-  const [sort,setSort] =useState(null)
+  const [tag, setTag] = useState(null);
+  const [category, setCategory] = useState(null);
+  const [brand, setbrand] = useState(null);
+  const [minPrice, setMinPrice] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(null);
+  const [sort, setSort] = useState(null);
 
-
-
-  
   const dispatch = useDispatch();
   useEffect(() => {
     getProducts();
-  }, [sort,tag,brand,category,minPrice,maxPrice]);
+  }, [sort, tag, brand, category, minPrice, maxPrice]);
   const getProducts = () => {
-    dispatch(getAllProducts({sort,tag,brand,category,minPrice,maxPrice}));
+    dispatch(
+      getAllProducts({ sort, tag, brand, category, minPrice, maxPrice })
+    );
   };
 
-  
   const gridSetter = (i) => {
     setGrid(i);
   };
 
   useEffect(() => {
-    let newBrands= [];
+    let newBrands = [];
     let category = [];
-   let  newtags=[];
-   let newColors= [];
-      for (let index = 0; index < productState.length; index++) {
-        
-          const element = productState[index];
-          newBrands.push(element?.brand)
-          category.push(element?.category)
-          newtags.push(element?.tags)
-          newColors.push(element?.color)
+    let newtags = [];
+    let newColors = [];
+    for (let index = 0; index < productState?.length; index++) {
+      const element = productState[index];
+      newBrands.push(element?.brand);
+      category.push(element?.category);
+      newtags.push(element?.tags);
+      newColors.push(element?.color);
+    }
 
-        }
-        
-        setbrands(newBrands)
-        setCategories(category)
-        setTags(newtags)
-        setColors(newColors)
-
-      },[productState])
-     console.log(colors);
+    setbrands(newBrands);
+    setCategories(category);
+    setTags(newtags);
+    setColors(newColors);
+  }, [productState]);
+  console.log(colors);
   return (
     <>
       <Meta title={"Our Store"} />
@@ -76,11 +68,14 @@ const OurStore = () => {
               <h3 className="filter-title">Shop By Categories</h3>
               <div>
                 <ul className="ps-0">
-                  {
-                    categories && [...new Set(categories)].map((item,index) => {
-                      return <li key={index} on onClick={() => setCategory(item)} >{item}</li>
-                    })
-                  }
+                  {categories &&
+                    [...new Set(categories)].map((item, index) => {
+                      return (
+                        <li key={index} on onClick={() => setCategory(item)}>
+                          {item}
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
             </div>
@@ -88,7 +83,7 @@ const OurStore = () => {
               <h3 className="filter-title">Filter By</h3>
               <div>
                 <h5 className="sub-title">Availablity </h5>
-               
+
                 <h5 className="sub-title">Price </h5>
                 <div className="d-flex align-items-center gap-10">
                   <div className="form-floting ">
@@ -99,7 +94,7 @@ const OurStore = () => {
                       placeholder="From"
                       onChange={(e) => setMinPrice(e.target.value)}
                     />
-                    <lable htmlFor="flotingInput"></lable>
+                    <label htmlFor="flotingInput"></label>
                   </div>
                   <div className="form-floting ">
                     <input
@@ -109,7 +104,7 @@ const OurStore = () => {
                       placeholder="To"
                       onChange={(e) => setMaxPrice(e.target.value)}
                     />
-                    <lable htmlFor="flotingInput"></lable>
+                    <label htmlFor="flotingInput"></label>
                   </div>
                 </div>
                 {/* <h5 className="sub-title">Colors </h5>
@@ -120,45 +115,47 @@ const OurStore = () => {
                 </div>
                 */}
 
-<div className="mt-4 mb-3">
-              <h3 className="sub-title">Product Tags</h3>
-              <div>
-                <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                {
-                    tags && [...new Set(tags)].map((item,index) => {
-                      return(
-                        <span onClick={() => setTag(item)} key={index} className=" text-capitalize badge bg-light text-secondary rounded-3 py-2 px-3">
-                      {item}
-                      </span>
-                      )
-                    })
-                  }
+                <div className="mt-4 mb-3">
+                  <h3 className="sub-title">Product Tags</h3>
+                  <div>
+                    <div className="product-tags d-flex flex-wrap align-items-center gap-10">
+                      {tags &&
+                        [...new Set(tags)].map((item, index) => {
+                          return (
+                            <span
+                              onClick={() => setTag(item)}
+                              key={index}
+                              className=" text-capitalize badge bg-light text-secondary rounded-3 py-2 px-3"
+                            >
+                              {item}
+                            </span>
+                          );
+                        })}
+                    </div>
+                  </div>
+                </div>
 
+                <div className="mt-4 mb-3">
+                  <h3 className="sub-title">Product Brands</h3>
+                  <div>
+                    <div className="product-tags d-flex flex-wrap align-items-center gap-10">
+                      {brands &&
+                        [...new Set(brands)].map((item, index) => {
+                          return (
+                            <span
+                              onClick={() => setbrand(item)}
+                              key={index}
+                              className=" text-capitalize badge bg-light text-secondary rounded-3 py-2 px-3"
+                            >
+                              {item}
+                            </span>
+                          );
+                        })}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div className="mt-4 mb-3">
-              <h3 className="sub-title">Product Brands</h3>
-              <div>
-                <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                {
-                    brands && [...new Set(brands)].map((item,index) => {
-                      return(
-                        <span onClick={() => setbrand(item)} key={index} className=" text-capitalize badge bg-light text-secondary rounded-3 py-2 px-3">
-                      {item}
-                      </span>
-                      )
-                    })
-                  }
-
-                </div>
-              </div>
-            </div>                                                                                      
-              </div>
-            </div>
-           
-  
           </div>
 
           <div className="col-9">
@@ -176,9 +173,7 @@ const OurStore = () => {
                     onChange={(e) => setSort(e.target.value)}
                   >
                     <option value="title">Alphabetically, A-Z</option>
-                    <option value="-title">
-                      Alphabetically, Z-A
-                    </option>
+                    <option value="-title">Alphabetically, Z-A</option>
                     <option value="price">Price, low to high</option>
                     <option value="-price">Price, high tp low</option>
                     <option value="created">Date, old to new</option>

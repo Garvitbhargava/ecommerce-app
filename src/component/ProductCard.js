@@ -1,12 +1,7 @@
 import React from "react";
 import ReactStars from "react-rating-stars-component";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-import prodcompare from "../images/prodcompare.svg";
 import wish from "../images/wish.svg";
-import wishlist from "../images/wishlist.svg";
-import watch from "../images/watch.jpg";
-import watch1 from "../images/watch-2.avif";
-import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist } from "../feature/products/productSlice";
@@ -16,7 +11,6 @@ const ProductCard = (props) => {
   const dispatch = useDispatch();
   let location = useLocation();
   const addToWish = (id) => {
-  
     dispatch(addToWishlist(id));
   };
 
@@ -43,13 +37,18 @@ const ProductCard = (props) => {
                   </button>
                 </div>
                 <div className="product-image">
-                  <img src={item?.images[0]?.url} 
-                  className="img-fluid  mx-auto "
-                   alt="product image"
-                  width={250} />
-                  <img src={watch1}   className="img-fluid mx-auto "
-                   alt="product image"
-                  width={160} />
+                  <img
+                    src={item?.images[0]?.url}
+                    className="img-fluid  mx-auto "
+                    alt="product image"
+                    width={200}
+                  />
+                  <img
+                    src={item?.images[0]?.url}
+                    className="img-fluid mx-auto "
+                    alt="product image"
+                    width={160}
+                  />
                 </div>
                 <div className="product-details">
                   <h6 className="brand">{item?.brand}</h6>

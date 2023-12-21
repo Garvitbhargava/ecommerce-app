@@ -46,7 +46,7 @@ const Blog = () => {
                     id={item?._id}
                     title={item?.title}
                     description={item?.description}
-                    image={item?.images?.url}
+                    images={item?.images}
                     date={moment(item?.createdAt).format(
                       "MMMM Do YYYY, h:mm a"
                     )}

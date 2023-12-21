@@ -30,7 +30,7 @@ const getProducts = async (data) => {
 const addToWishlist = async (prodId) => {
   const response = await axios.put(
     `${base_url}product/wishlist`,
-    { prodId },
+    { prodId, token: localStorage.getItem("token") },
     config
   );
   if (response.data) {

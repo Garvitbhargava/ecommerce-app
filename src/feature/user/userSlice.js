@@ -159,10 +159,10 @@ export const createAnOrder = createAsyncThunk(
 
 export const resetState = createAction("Reset_all");
 
-const getCustomerfromLocalStorage = localStorage.getItem("customer");
+const getCustomerfromLocalStorage = localStorage.getItem("user");
 
 const initialState = {
-  user: getCustomerfromLocalStorage,
+  user: JSON.parse(getCustomerfromLocalStorage),
   isError: false, // Updated to a boolean
   isSuccess: false, // Updated to a boolean
   isLoading: false, // Updated to a boolean
@@ -206,6 +206,7 @@ export const authSlice = createSlice({
         state.user = action.payload;
         if (state.isSuccess === true) {
           localStorage.setItem("token", action.payload.token);
+          localStorage.setItem("user", JSON.stringify(action.payload));
           toast.info("User logged in Successfully");
         }
       })

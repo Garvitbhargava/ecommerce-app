@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BreadCrump from "../component/BreadCrump";
 import Meta from "../component/Meta";
-import watch from "../images/watch.jpg";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Container from "../component/Container";
@@ -28,6 +27,7 @@ const Cart = () => {
 
   const [productQuantities, setProductQuantities] = useState({});
 
+  // eslint-disable-next-line no-unused-vars
   const handleQuantityChange = (cartItemId, newQuantity) => {
     setProductQuantities({
       ...productQuantities,
@@ -51,7 +51,7 @@ const Cart = () => {
         dispatch(getUserCart(config2));
       }, 200);
     }
-  }, [productUpdateDetail]);
+  }, [config2, dispatch, productUpdateDetail]);
 
   const deleteACartProduct = (id) => {
     dispatch(deleteCartProduct({ id: id, config2: config2 }));
@@ -93,6 +93,7 @@ const Cart = () => {
                   >
                     <div className="cart-col-1 d-flex gap-15  align-items-center">
                       <div className="w-25">
+                        // eslint-disable-next-line jsx-a11y/img-redundant-alt
                         <img
                           src={item?.productId?.images[0]?.url}
                           className="img-fluid"

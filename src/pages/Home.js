@@ -453,7 +453,7 @@ const Home = () => {
                     id={item?._id}
                     title={item?.title}
                     description={item?.description}
-                    images={item?.images[0]?.url}
+                    images={item?.images}
                     date={moment(item?.createdAt).format(
                       "MMMM Do YYYY, h:mm a"
                     )}

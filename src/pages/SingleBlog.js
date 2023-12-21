@@ -36,7 +36,7 @@ const SingleBlog = () => {
               </Link>
               <h3 className="title">{blogState?.title} </h3>
               <img
-                src={blogState?.images?.url ? blogState?.images?.url : blog}
+                src={blogState?.images ? blogState?.images : blog}
                 className="img-fluid w-100 my-4"
                 alt="blog"
               />

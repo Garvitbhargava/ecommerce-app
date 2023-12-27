@@ -27,7 +27,6 @@ const Cart = () => {
 
   const [productQuantities, setProductQuantities] = useState({});
 
-  // eslint-disable-next-line no-unused-vars
   const handleQuantityChange = (cartItemId, newQuantity) => {
     setProductQuantities({
       ...productQuantities,
@@ -93,7 +92,6 @@ const Cart = () => {
                   >
                     <div className="cart-col-1 d-flex gap-15  align-items-center">
                       <div className="w-25">
-                        // eslint-disable-next-line jsx-a11y/img-redundant-alt
                         <img
                           src={item?.productId?.images[0]?.url}
                           className="img-fluid"
@@ -158,7 +156,7 @@ const Cart = () => {
 
           <div className="col-12 py-2 mt-4">
             <div className="d-flex justify-content-between align-items-baseline">
-              <Link to="/product" className="button">
+              <Link to="/store" className="button">
                 Continue to Shopping
               </Link>
               {(totalAmount !== null || totalAmount !== 0) && (

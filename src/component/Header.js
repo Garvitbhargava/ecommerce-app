@@ -184,18 +184,18 @@ const Header = () => {
                       aria-labelledby="dropdownMenuButton1"
                     >
                       <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Action
+                        <Link className="dropdown-item text-white" to="/store">
+                          Our Popular Product
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Another action
+                        <Link className="dropdown-item text-white" to="/store">
+                          Featured Product
                         </Link>
                       </li>
                       <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Something else here
+                        <Link className="dropdown-item text-white" to="/store">
+                          Special Product
                         </Link>
                       </li>
                     </ul>
@@ -208,14 +208,16 @@ const Header = () => {
                     <NavLink to="/my-orders">My Orders</NavLink>
                     <NavLink to="/blogs">Blogs</NavLink>
                     <NavLink to="/Contact">Contact</NavLink>
-                    <button
-                      onClick={handleLogout}
-                      className="border border-0 bg-transparent text-white text-uppercase"
-                      type="button"
-                    >
-                      {" "}
-                      Logout{" "}
-                    </button>
+                    {authState?.user === null ? null : (
+                      <button
+                        onClick={handleLogout}
+                        className="border border-0 bg-transparent text-white text-uppercase"
+                        type="button"
+                      >
+                        {" "}
+                        Logout{" "}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
